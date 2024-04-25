@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from colorama import Fore
 import argparse
 import requests
@@ -28,7 +30,7 @@ class Score:
              + Fore.RESET
 
     def get_color(self):
-        if self.score < 0 :
+        if self.score < 0:
             return Fore.LIGHTCYAN_EX
         elif self.percentile == -1:
             return Fore.CYAN
@@ -45,12 +47,12 @@ class Score:
 def get_words(lang, wordlist):
     wordlist_path = wordlist if wordlist is not None else ('./words_' + lang + '.txt')
     with open(wordlist_path, 'r') as f:
-        return f.read().split('\n')
+        return [line.strip() for line in f.readlines()]
 
 
 def get_score(id, word, lang):
     url = CEMANTLE_URL[lang] + '/score'
-    data = { 'word': word }
+    data = {'word': word}
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Origin': CEMANTLE_URL[lang]
@@ -68,7 +70,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Cemantle Assistant')
     parser.add_argument('--lang', type=str, required=False, default='en', choices=['en', 'fr'], help='Language')
     parser.add_argument('--wordlist', type=str, required=False, help='Custom word list')
-    parser.add_argument('--max_rows', type=int, required=False, default=15, help='Max number of best results to display')
+    parser.add_argument('--max_rows', type=int, required=False, default=15, help='Max number of results to display')
     return parser.parse_args()
 
 
